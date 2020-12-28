@@ -20,7 +20,10 @@ public class WriteCommittedStreamIT {
 
   @Test
   public void testWriteCommittedStream() throws Exception {
+	  System.out.println("testWriteCommittedStream");
     WriteCommittedStream.writeCommittedStream(BIGQUERY_PROJECT_NAME, BIGQUERY_DATASET_NAME, BIGQUERY_TABLE_NAME);
+    //WriteCommittedStream.writeToDefaultStream(BIGQUERY_PROJECT_NAME, BIGQUERY_DATASET_NAME, BIGQUERY_TABLE_NAME);
+
   }
 }
 

@@ -1,10 +1,13 @@
 package com.example.bigquerystorage;
 
+import com.google.cloud.bigquery.*;
+import com.google.cloud.bigquery.Schema;
+
 import com.google.cloud.bigquery.storage.v1beta2.*;
-import com.google.cloud.bigquery.storage.v1beta2.JsonStreamWriter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.google.api.core.ApiFuture;
+
 
 public class WriteCommittedStream  {
 
@@ -21,7 +24,8 @@ public class WriteCommittedStream  {
  }
 
  public static void writeCommittedStream(
-     String projectId, String datasetName, String tableName) {
+     String projectId, String datasetName, String tableName)
+ {
 
     try (BigQueryWriteClient client = BigQueryWriteClient.create()) {
 
@@ -58,4 +62,46 @@ public class WriteCommittedStream  {
       System.out.println(e);
     }
   }
+
+  public static void writeToDefaultStream(
+    String projectId, String datasetName, String tableName) {
+
+    TableName parent = TableName.of(projectId, datasetName, tableName);
+
+    TableInfo tableInfo = TableInfo.newBuilder(
+		    TableId.of(datasetName, tableName),
+		    StandardTableDefinition.of(
+			    Schema.of(
+				    Field.newBuilder("col1", StandardSQLTypeName.STRING)
+				        .setMode(Field.Mode.NULLABLE)
+					.build())))
+	    .build();
+    
+   // BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
+   // Table table = bigquery.getTable(datasetName, tableName);
+    //Schema schema = table.getDefinition().getSchema();
+
+    Schema schema2 = tableInfo.getDefinition().getSchema();
+
+    try (JsonStreamWriter writer = JsonStreamWriter.newBuilder(parent.toString(),schema2)
+        .createDefaultStream()
+	.build())
+    {
+    
+        for (int i = 0; i < 10; i++) {
+          JSONObject record = new JSONObject();
+          record.put("col1", String.format("00-default-record %03d",i));
+          JSONArray jsonArr = new JSONArray();
+          jsonArr.put(record); 
+
+          ApiFuture<AppendRowsResponse> future = writer.append(jsonArr,false);
+          AppendRowsResponse response = future.get();
+	}
+    }
+    catch (Exception e) {
+	    System.out.println(e);
+    }
+
+  }
+  
 }

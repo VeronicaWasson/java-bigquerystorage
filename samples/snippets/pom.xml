@@ -42,6 +42,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-bigquerystorage</artifactId>
+      <version>1.7.3-SNAPSHOT</version>
     </dependency>
     <!-- [END bigquerystorage_install_with_bom] -->
 
