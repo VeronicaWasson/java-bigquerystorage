@@ -30,7 +30,6 @@ import java.nio.file.Path;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -44,9 +43,6 @@ public class JsonWriterDefaultStreamIT {
   private PrintStream out;
   private BigQuery bigquery;
   private String datasetName;
-
-  @BeforeClass
-  public static void beforeClass() {}
 
   @Before
   public void setUp() {
@@ -77,4 +73,5 @@ public class JsonWriterDefaultStreamIT {
         DatasetId.of(GOOGLE_CLOUD_PROJECT, datasetName), DatasetDeleteOption.deleteContents());
     System.setOut(null);
   }
+
 }
